@@ -1,4 +1,4 @@
 # Simulation-of-a-crowd-movement
 This code aims at simulating a crowd movement using a macroscopic model
 
-[![Simulation of a crowd movement](https://www.youtube.com/upload_thumbnail?v=Zdt27PDgvk4&t=1&ts=1462448593164)](https://youtu.be/Zdt27PDgvk4)
+[![Simulation of a crowd movement](https://i.ytimg.com/vi/Zdt27PDgvk4/1.jpg)](https://youtu.be/Zdt27PDgvk4)
