@@ -1,27 +1,5 @@
 from PriorityQueue import PriorityQueue
-from GridGraph import GridGraph
-from Obstacles import Obstacle
-
 import numpy;
-
-from pylab import imshow,show
-
-precision = 1; #nodes per unity
-horizontal_size = 100;
-vertical_size = 100;
-
-start = (1,1);
-goal = (90,40);
-
-obstacles = []
-obstacle1 = Obstacle((70,0),10,70)
-obstacle2 = Obstacle((80,60),18,10)
-obstacles.append(obstacle1)
-obstacles.append(obstacle2)
-
-Graph = GridGraph(horizontal_size,vertical_size,precision)
-
-Graph.update_map_obstales(obstacles)
 
 def fast_marching_method(Graph,start,goal):
     
@@ -77,11 +55,6 @@ def fast_marching_method(Graph,start,goal):
                     frontier[neighbour][0]=calculus_distance(neighbour,Graph,weights)+heuristic(neighbour, start);
                     weights[neighbour]=calculus_distance(neighbour,Graph,weights)
     return weights
-        
-
-weights = fast_marching_method(Graph, Graph.to_node(start),Graph.to_node(goal))
-imshow(weights)
 
 #X,Y = meshgrid(numpy.linspace(0,precision-1,precision),numpy.linspace(0,precision-1,precision))
 #plt.scatter(X,Y,c=weights,s=1000)
-show()
