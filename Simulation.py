@@ -1,35 +1,55 @@
-from PriorityQueue import PriorityQueue
-from GridGraph import GridGraph
 from Obstacles import Obstacle
-from FastMarching import *
+from FastMarching import fast_marching_method
 from Agent import *
 
 import numpy;
+import matplotlib.pyplot as plot;
 
 from pylab import imshow,show
 
 
-precision = 0.5; #nodes per unity
+precision = 1; #nodes per unity
 horizontal_size = 100;
 vertical_size = 100;
 
-exit = (10,10);
+exit = (90,90);
 
 obstacles = []
-obstacle1 = Obstacle((70,0),10,70)
-obstacle2 = Obstacle((80,60),18,10)
+obstacle1 = Obstacle((70,40),10,60)
+obstacle2 = Obstacle((60,80),18,10)
+obstacle3 = Obstacle((40,10),60,10)
 obstacles.append(obstacle1)
 obstacles.append(obstacle2)
+obstacles.append(obstacle3)
 
 agents = []
-agent1 = Agent((10,80))
+agent1 = Agent((20,80))
 
 Graph = GridGraph(horizontal_size,vertical_size,precision)
 
 Graph.update_map_obstales(obstacles)
 
 weights = fast_marching_method(Graph, Graph.to_node(agent1.position),Graph.to_node(exit))
-imshow(weights)
+imshow(weights,origin='lower')
+
+
+dt = 2
+
+positions = []
+
+
+for i in range(80):
+    
+    
+    agent1.update_speed(weights, Graph)
+    agent1.update_position(agents,obstacles,dt)
+    positions.append(agent1.position)
+
+positions = numpy.array(positions)
+print positions
+axis = plot.gca()
+axis.set_xlim([0,horizontal_size])
+axis.set_ylim([0,vertical_size])
+plot.scatter(positions[:,0],positions[:,1])
 show()
 
-agent1.update_speed(weights, Graph)

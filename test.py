@@ -1,23 +1,91 @@
-from pylab import *
-import numpy
-from Obstacles import Obstacle
+from PriorityQueue import PriorityQueue
 from GridGraph import GridGraph
+from Obstacles import Obstacle
+from FastMarching import *
+from Agent import *
 
-# the x distribution will be centered at -1, the y distro
-# at +1 with twice the width.
-x = numpy.random.randn(3000)-1
-y = numpy.random.randn(3000)*2+1
+import numpy;
+import matplotlib.pyplot as plot;
 
-hist,xedges,yedges = numpy.histogram2d(x,y,bins=40,range=[[-6,4],[-4,6]])
-extent = [xedges[0], xedges[-1], yedges[0], yedges[-1] ]
-imshow(hist.T,extent=extent,interpolation='nearest',origin='lower')
-colorbar()
-#show()
+from pylab import imshow,show
 
-#obstacle1 = Obstacle((30,0),5,5)
-#obstacles = []
-#obstacles.append(obstacle1)
-#grid = GridGraph(200,100,0.5)
-#grid.update_map_obstales(obstacles)
+def calculation_vector(position,weights,graph):
+    neighbours = graph.get_neighbours(position);
+    if 'i-1' in neighbours :
+        if 'i+1' in neighbours:
+            if (weights[neighbours['i-1']]>weights[neighbours['i+1']]):
+                sign_x1 = 1
+            else:
+                sign_x1=-1
+            diffy = max(max(weights[position]-weights[neighbours['i+1']],weights[position]-weights[neighbours['i-1']]),0)
+        else :
+            sign_x1 = -1
+            diffy = max(weights[position]-weights[neighbours['i-1']],0);
+    else :
+        if 'i+1' in neighbours:
+            sign_x1 = 1
+            diffy = max(weights[position]-weights[neighbours['i+1']],0);
+        else:
+            sign_x1 = 0
+            diffy = 0
+    if 'j-1' in neighbours:
+        if 'j+1' in neighbours:
+            if weights[neighbours['j-1']]>weights[neighbours['j+1']]:
+                sign_x2 = 1
+            else :
+                sign_x2 = -1
+            diffx = max(max(weights[position]-weights[neighbours['j-1']],weights[position]-weights[neighbours['j+1']]),0)
+        else :
+            sign_x2 = -1
+            diffx = max(weights[position]-weights[neighbours['j-1']],0);
+    else :
+        if 'j+1' in neighbours:
+            sign_x2 = 1
+            diffx = max(weights[position]-weights[neighbours['j+1']],0);
+        else:
+            sign_x2 = 0
+            diffx = 0
+    res = (diffx*sign_x2,diffy*sign_x1)
+    return res
 
-print float('inf')-float('inf')>=0
+
+hh = 100
+vv = 100
+
+
+obstacles = []
+obstacle1 = Obstacle((0,70),10,70)
+obstacle2 = Obstacle((60,80),18,10)
+obstacles.append(obstacle1)
+obstacles.append(obstacle2)
+
+agents = []
+agent1 = Agent((80,15))
+
+precision = 0.1
+
+Graph = GridGraph(hh,vv,precision)
+
+Graph.update_map_obstales(obstacles)
+
+exit = (10,80)
+
+weights = fast_marching_method(Graph, Graph.to_node(agent1.position),Graph.to_node(exit))
+imshow(weights)
+print weights
+print 'aa'
+show()
+X,Y = numpy.meshgrid(numpy.arange(0,int(hh*precision),1),numpy.arange(0,int(vv*precision),1))
+W = X*X+Y*Y
+
+U = X.astype(float)
+V = X.astype(float)
+for i in range(int(hh*precision)):
+    for j in range(int(vv*precision)):
+        U[i,j]=1
+        V[i,j]=1
+plot.gca().invert_yaxis()
+
+plot.quiver(X,Y,U,V)
+show()
+print U,V

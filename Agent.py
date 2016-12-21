@@ -1,4 +1,5 @@
 from GridGraph import GridGraph
+from numpy.dual import norm
 class Agent():
     '''
     classdocs
@@ -15,45 +16,39 @@ class Agent():
     def update_speed(self,weights,graph):
         position_node = graph.to_node(self.position)
         neighbours = graph.get_neighbours(position_node);
-        #print neighbours
-        #print 'u',weights[neighbours['up']],'d',weights[neighbours['down']],'l',weights[neighbours['left']],'r',weights[neighbours['right']]
-        if 'up' in neighbours :
-            if 'down' in neighbours:
-                if (weights[neighbours['up']]>weights[neighbours['down']]):
-                    sign_x1 = 1
+        if 'y-1' in neighbours :
+            if 'y+1' in neighbours:
+                if (weights[neighbours['y-1']]>weights[neighbours['y+1']]):
+                    sign_y = 1
                 else:
-                    sign_x1=-1
-                x1 = min(weights[neighbours['up']],weights[neighbours['down']]);
+                    sign_y = -1
+                diff_y = max(max(weights[position_node]-weights[neighbours['y-1']],weights[position_node]-weights[neighbours['y+1']]),0);
             else :
-                sign_x1 = -1
-                x1 = weights[neighbours['up']];
+                sign_y = -1
+                diff_y = max(weights[position_node]-weights[neighbours['y-1']],0);
         else :
-            if 'down' in neighbours:
-                sign_x1 = 1
-                x1 = weights[neighbours['down']];
-        if 'left' in neighbours:
-            if 'right' in neighbours:
-                if weights[neighbours['left']]>weights[neighbours['right']]:
-                    sign_x2 = 1
+            if 'y+1' in neighbours:
+                sign_y = 1
+                diff_y = max(weights[position_node]-weights[neighbours['y+1']],0);
+        if 'x-1' in neighbours:
+            if 'x+1' in neighbours:
+                if weights[neighbours['x-1']]>weights[neighbours['x+1']]:
+                    sign_x = 1
                 else :
-                    sign_x2 = -1
-                x2 = min(weights[neighbours['left']],weights[neighbours['right']]);
+                    sign_x = -1
+                diff_x = max(max(weights[position_node]-weights[neighbours['x-1']],weights[position_node]-weights[neighbours['x+1']]),0);
             else :
-                sign_x2 = -1
-                x2 = weights[neighbours['left']];
+                sign_x = -1
+                diff_x = max(weights[position_node]-weights[neighbours['x-1']],0);
         else :
-            if 'right' in neighbours:
-                sign_x2 = 1
-                x2 = weights[neighbours['right']];
-        if abs(x1-x2)<1 :
-            alpha = 0.5+abs(x2-x1)/(2*(2-abs(x2-x1)**2)**0.5)
-            if x1>x2 :
-                self.speed = (alpha*sign_x1,(1-alpha)*sign_x2)
-            else :
-                self.speed = ((1-alpha)*sign_x1,alpha*sign_x2)
-        else:
-            if x1>x2:
-                self.speed = (sign_x1,0)
-            else:
-                self.speed = (0,sign_x2)
-        #print self.speed
+            if 'x+1' in neighbours:
+                sign_x = 1
+                diff_x = max(weights[position_node]-weights[neighbours['x+1']],0);
+        self.speed = (diff_x*sign_x,diff_y*sign_y)
+        if self.speed!=(0,0):
+            self.speed = (diff_x*sign_x/(diff_y**2+diff_x**2)**0.5,diff_y*sign_y/(diff_y**2+diff_x**2)**0.5)
+        
+    def update_position(self,agents,obstacles,dt):
+        
+        
+        self.position = (self.position[0]+dt*self.speed[0],self.position[1]+dt*self.speed[1])

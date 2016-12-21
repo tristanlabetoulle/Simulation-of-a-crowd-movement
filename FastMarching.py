@@ -3,25 +3,26 @@ import numpy;
 
 def fast_marching_method(Graph,start,goal):
     
+    h = 1
+    
     def calculus_distance(node,Graph,weights):
-        h=1;
         neighbours = Graph.get_neighbours(node);
-        if 'up' in neighbours :
-            if 'down' in neighbours:
-                x1 = min(weights[neighbours['up']],weights[neighbours['down']]);
+        if 'y-1' in neighbours :
+            if 'y+1' in neighbours:
+                x1 = min(weights[neighbours['y-1']],weights[neighbours['y+1']]);
             else :
-                x1 = weights[neighbours['up']];
+                x1 = weights[neighbours['y-1']];
         else :
-            if 'down' in neighbours:
-                x1 = weights[neighbours['down']];
-        if 'left' in neighbours:
-            if 'right' in neighbours:
-                x2 = min(weights[neighbours['left']],weights[neighbours['right']]);
+            if 'y+1' in neighbours:
+                x1 = weights[neighbours['y+1']];
+        if 'x-1' in neighbours:
+            if 'x+1' in neighbours:
+                x2 = min(weights[neighbours['x-1']],weights[neighbours['x+1']]);
             else :
-                x2 = weights[neighbours['left']];
+                x2 = weights[neighbours['x-1']];
         else :
-            if 'right' in neighbours:
-                x2 = weights[neighbours['right']];
+            if 'x+1' in neighbours:
+                x2 = weights[neighbours['x+1']];
         
         if 2*h**2-(x1-x2)**2>=0:
             return (x1+x2+(2*h**2-(x1-x2)**2)**0.5)/2
@@ -29,7 +30,8 @@ def fast_marching_method(Graph,start,goal):
             return min(x1,x2)+h
         
     def heuristic(node,goal):
-        return ((node[0]-goal[0])**2+(node[1]-goal[1])**2)**0.5
+        #return ((node[0]-goal[0])**2+(node[1]-goal[1])**2)**0.5*h
+        return 0
     
     frontier = PriorityQueue();
     weights = numpy.ones((Graph.vertical_size,Graph.horizontal_size))*float('inf');
@@ -43,8 +45,8 @@ def fast_marching_method(Graph,start,goal):
     while frontier:
         node = frontier.pop();
         explored.append(node[1])
-        if node[1]==start:
-            return weights
+        #if node[1]==start:
+        #    return weights
         neighbours = Graph.get_neighbours(node[1]);
         for neighbour in neighbours.itervalues():
             if neighbour not in explored and Graph.map[neighbour]:
