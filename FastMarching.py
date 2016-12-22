@@ -45,8 +45,8 @@ def fast_marching_method(Graph,start,goal):
     while frontier:
         node = frontier.pop();
         explored.append(node[1])
-        #if node[1]==start:
-        #    return weights
+        if node[1]==start:
+            return weights
         neighbours = Graph.get_neighbours(node[1]);
         for neighbour in neighbours.itervalues():
             if neighbour not in explored and Graph.map[neighbour]:

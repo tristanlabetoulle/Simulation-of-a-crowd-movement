@@ -8,7 +8,7 @@ import matplotlib.pyplot as plot;
 from pylab import imshow,show
 
 
-precision = 1; #nodes per unity
+precision = 2; #nodes per unity
 horizontal_size = 100;
 vertical_size = 100;
 
@@ -23,14 +23,15 @@ obstacles.append(obstacle2)
 obstacles.append(obstacle3)
 
 agents = []
-agent1 = Agent((20,80))
+agent1 = Agent((55,80),1)
+agents.append(agent1)
 
 Graph = GridGraph(horizontal_size,vertical_size,precision)
 
 Graph.update_map_obstales(obstacles)
 
 weights = fast_marching_method(Graph, Graph.to_node(agent1.position),Graph.to_node(exit))
-imshow(weights,origin='lower')
+imshow(weights,origin='lower',extent=[0,horizontal_size,0,vertical_size])
 
 
 dt = 2
@@ -38,7 +39,7 @@ dt = 2
 positions = []
 
 
-for i in range(80):
+for i in range(100):
     
     
     agent1.update_speed(weights, Graph)

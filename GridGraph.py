@@ -1,5 +1,4 @@
 import numpy
-from numpy.ma.core import size
 
 class GridGraph:
     
@@ -26,5 +25,8 @@ class GridGraph:
     
     def update_map_obstales(self,obstacles):
         for obstacle in obstacles:
-            self.map[self.to_node(obstacle.position)[0]:self.to_node(obstacle.position)[0]+int(self.precision*obstacle.width)+1,self.to_node(obstacle.position)[1]:self.to_node(obstacle.position)[1]+int(self.precision*obstacle.length)+1]=0
+            dl = obstacle.position
+            ur = (obstacle.position[0]+obstacle.width,obstacle.position[1]+obstacle.height)
+            self.map[self.to_node(dl)[0]:self.to_node(ur)[0]+1,self.to_node(dl)[1]:self.to_node(ur)[1]+1]=0
+            #self.map[self.to_node(obstacle.position)[0]:self.to_node(obstacle.position)[0]+int(self.precision*obstacle.width)+1,self.to_node(obstacle.position)[1]:self.to_node(obstacle.position)[1]+int(self.precision*obstacle)+1]=0
         

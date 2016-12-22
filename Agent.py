@@ -84,11 +84,13 @@ class Agent():
                             time_move_up = float('inf')
                             
                         if time_move_up>=0 and time_move_up<=new_time_move:
-                            new_time_move = time_move_up
-                            direction_conflict_obstacles[i]=(0,1)
+                            if self.position[0]+self.speed[0]*time_move_up>=dl[0] and self.position[0]+self.speed[0]*time_move_up<=dr[0]:
+                                new_time_move = time_move_up
+                                direction_conflict_obstacles[i]=(0,1)
                         if time_move_right>=0 and time_move_right<=new_time_move:
-                            new_time_move = time_move_right
-                            direction_conflict_obstacles[i]=(1,0)
+                            if self.position[1]+self.speed[1]*time_move_right>=dl[1] and self.position[1]+self.speed[1]*time_move_right<=ul[1]:
+                                new_time_move = time_move_right
+                                direction_conflict_obstacles[i]=(1,0)
                     else:
                         if self.speed[0]:
                             time_move_right = (ul[0]-self.size-self.position[0])/float(self.speed[0])
@@ -97,11 +99,13 @@ class Agent():
                         time_move_down = (ul[1]+self.size-self.position[1])/float(self.speed[1])
                         
                         if time_move_down>=0 and time_move_down<=new_time_move:
-                            new_time_move = time_move_down
-                            direction_conflict_obstacles[i]=(0,-1)
+                            if self.position[0]+self.speed[0]*time_move_down>=ul[0] and self.position[0]+self.speed[0]*time_move_down<=ur[0]:
+                                new_time_move = time_move_down
+                                direction_conflict_obstacles[i]=(0,-1)
                         if time_move_right>=0 and time_move_right<=new_time_move:
-                            new_time_move = time_move_right
-                            direction_conflict_obstacles[i]=(1,0)
+                            if self.position[1]+self.speed[1]*time_move_right>=dl[1] and self.position[1]+self.speed[1]*time_move_right<=ul[1]:
+                                new_time_move = time_move_right
+                                direction_conflict_obstacles[i]=(1,0)
                 else:
                     if self.speed[1]>=0:
                         time_move_left = (dr[0]+self.size-self.position[0])/float(self.speed[0])
@@ -110,21 +114,25 @@ class Agent():
                         else:
                             time_move_up = float('inf')
                         if time_move_up>=0 and time_move_up<=new_time_move:
-                            new_time_move = time_move_up
-                            direction_conflict_obstacles[i]=(0,1)
+                            if self.position[0]+self.speed[0]*time_move_up>=dl[0] and self.position[0]+self.speed[0]*time_move_up<=dr[0]:
+                                new_time_move = time_move_up
+                                direction_conflict_obstacles[i]=(0,1)
                         if time_move_left>=0 and time_move_left<=new_time_move:
-                            new_time_move = time_move_left
-                            direction_conflict_obstacles[i]=(-1,0)
+                            if self.position[1]+self.speed[1]*time_move_left>=dr[1] and self.position[1]+self.speed[1]*time_move_left<=ur[1]:
+                                new_time_move = time_move_left
+                                direction_conflict_obstacles[i]=(-1,0)
                     else:
                         time_move_left = (ur[0]+self.size-self.position[0])/float(self.speed[0])
                         time_move_down = (ur[1]+self.size-self.position[1])/float(self.speed[1])
                         
                         if time_move_down>=0 and time_move_down<=new_time_move:
-                            new_time_move = time_move_down
-                            direction_conflict_obstacles[i]=(0,-1)
+                            if self.position[0]+self.speed[0]*time_move_down>=ul[0] and self.position[0]+self.speed[0]*time_move_down<=ur[0]:
+                                new_time_move = time_move_down
+                                direction_conflict_obstacles[i]=(0,-1)
                         if time_move_left>=0 and time_move_left<=new_time_move:
-                            new_time_move = time_move_left
-                            direction_conflict_obstacles[i]=(-1,0)
+                            if self.position[1]+self.speed[1]*time_move_left>=dr[1] and self.position[1]+self.speed[1]*time_move_left<=ur[1]:
+                                new_time_move = time_move_left
+                                direction_conflict_obstacles[i]=(-1,0)
                 
                 if new_time_move<time_move:
                     index_conflict_obstacles = []
@@ -183,6 +191,7 @@ class Agent():
                 C = dot(X-X2,X-X2)-(r1+r2)**2
                 DELTA2 = B**2-4*A*C
                 pressure = dt-time_move
+                print pressure,U,X2-X,pressure*dot(U,X2-X)/norm(X2-X)
                 agents[index].colour_agents[index_agent] = pressure*dot(U,X2-X)/norm(X2-X)
                 agents[index_agent].colour_agents[index] = pressure*dot(U,X2-X)/norm(X2-X)
         
