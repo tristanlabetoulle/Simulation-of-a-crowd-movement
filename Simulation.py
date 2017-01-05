@@ -19,9 +19,9 @@ def example_simulation():
     
     size_scene = (100,100)#size_scene[0]==horizontal and size_scene[1]==vertical
     
-    obstacles = [Obstacle((70,40),10,60),Obstacle((24,50),50,10),Obstacle((30,10),10,40)]
+    obstacles = [Obstacle((70,40),10,60),Obstacle((20,50),50,10),Obstacle((30,10),10,40)]
     
-    exits = [Exit((80,80),10,1)]
+    exits = [Exit((85,99),10,2)]
 
     # warning, the size must be chosen as an integer, agent.size*precision must preferably be an integer to improve speed
     agents = [Agent((10,90),1),Agent((10,80),1),Agent((10,70),1),Agent((10,60),2),Agent((10,50),2),Agent((10,40),2)
@@ -29,7 +29,7 @@ def example_simulation():
               ,Agent((14,60),2),Agent((14,50),2),Agent((14,40),2),Agent((14,30),2),Agent((14,20),2),Agent((14,10),4)
               ]
 
-    time_simulation = 20 #in seconds
+    time_simulation = 40 #in seconds
     dt = .1 # in seconds
 
     launch_simulation(size_scene,obstacles,exits,agents,time_simulation,dt)
