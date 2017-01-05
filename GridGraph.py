@@ -1,7 +1,5 @@
 import numpy
 
-from pylab import show,imshow
-
 class GridGraph:
 
     global OBSTACLE

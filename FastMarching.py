@@ -1,6 +1,8 @@
 from PriorityQueue import PriorityQueue
 import numpy;
 
+from pylab import show,imshow
+
 def fast_marching_method(graph,start):
     
     h = 1
@@ -58,6 +60,6 @@ def fast_marching_method(graph,start):
                     frontier[neighbour][0]=calculus_distance(neighbour,graph,weights)
                     weights[neighbour]=calculus_distance(neighbour,graph,weights)
     graph.distances = weights
-
+    
 #X,Y = meshgrid(numpy.linspace(0,precision-1,precision),numpy.linspace(0,precision-1,precision))
 #plt.scatter(X,Y,c=weights,s=1000)

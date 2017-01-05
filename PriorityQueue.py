@@ -2,8 +2,7 @@ import heapq;
 
 
 class PriorityQueue():
-    """Implementation of a priority queue 
-    to store nodes during search."""
+    """Implementation of a priority queue"""
 
     def __init__(self):
         self.queue = []
@@ -12,9 +11,6 @@ class PriorityQueue():
     def pop(self):
         return heapq.heappop(self.queue)
         
-    # TODO: This is a hint, you might require this in ucs,
-    # however, if you choose not to use it, you are free to 
-    # define your own method and not use it.
     def remove(self, nodeId):
         for i in range(len(self.queue)):
             if self.queue[i][1]==nodeId:

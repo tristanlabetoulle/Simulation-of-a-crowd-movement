@@ -1,12 +1,12 @@
 from Agent import Agent
-from Obstacles import Obstacle
+from Obstacle import Obstacle
 
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 
 from math import exp
 
-from Exits import Exit
+from Exit import Exit
 
 fig1 = plt.figure()
 ax1 = fig1.add_subplot(111, aspect='equal')

@@ -1,7 +1,7 @@
 
 from numpy.linalg import norm
 from numpy import dot,array
-from Obstacles import Obstacle
+from Obstacle import Obstacle
 
 from math import exp
 
@@ -9,7 +9,10 @@ class Agent():
     '''
     classdocs
     '''
-
+    global WANTED_SPEED# the wanted speed of the agents, usually 4meters/second in case of a panick movement
+    global REMOTENESS_SPEED# the speed at which agent want to be distant from each other
+    WANTED_SPEED = 4
+    REMOTENESS_SPEED = 4
 
     def __init__(self, position,size):
         '''
@@ -28,7 +31,7 @@ class Agent():
         return self.position == other.position
     
     def __repr__(self):
-        return 'Agent '+str(self.position)+' '+str(self.speed)+' '+str(self.size)
+        return 'Agent'+'\n'+'Position :'+str(self.position)+'\n'+'Speed :'+str(self.speed)
         
     def update_speed(self,agents,obstacles):
         
@@ -65,7 +68,9 @@ class Agent():
         self.speed = (diff_x*sign_x,diff_y*sign_y)
         if self.speed!=(0,0):
             self.speed = (diff_x*sign_x/(diff_y**2+diff_x**2)**0.5,diff_y*sign_y/(diff_y**2+diff_x**2)**0.5)
-            
+        
+        self.dd2 = self.speed
+        
         for obstacle in obstacles:
             DL = array(obstacle.position)
             UL = array((obstacle.position[0],obstacle.position[1]+obstacle.height))
@@ -76,13 +81,17 @@ class Agent():
             for corner in corners:
                 X = array(self.position)
                 #print dot(X-corner,X-corner)**0.5,X
-                if round(dot(X-corner,X-corner)**0.5,3)==self.size:
+                if round(dot(X-corner,X-corner)**0.5,4)==self.size:
                     speed = array((-X[1]+corner[1],X[0]-corner[0]))
                     speed = speed/(dot(speed,speed)**0.5)
                     if dot(speed,self.speed)<0:
                         self.speed = tuple(-speed)
                     else:
                         self.speed = tuple(speed)
+        
+        self.speed = (self.speed[0]*WANTED_SPEED,self.speed[1]*WANTED_SPEED)
+        
+        
         
         if not self.pressure_scenery:
             U = array(self.speed)
@@ -93,7 +102,7 @@ class Agent():
                     distance_agents = dot(X-X2,X-X2)**0.5
                     direction=(X-X2)/(dot(X-X2,X-X2)**0.5)
                     sigma = 3
-                    U=U+1*exp(-(distance_agents-self.size-agent.size)**2/(2*float(sigma)**2))*direction
+                    U=U+REMOTENESS_SPEED*exp(-(distance_agents-self.size-agent.size)**2/(2*float(sigma)**2))*direction
             self.speed = tuple(U)
         
     def update_position(self,agents,obstacles,exits,dt,size_scene):
@@ -134,11 +143,10 @@ class Agent():
                     time_move_up = min((dl[1]-sign_*self.size-self.position[1])/float(self.speed[1]),(ul[1]-sign_*self.size-self.position[1])/float(self.speed[1]))
                     if time_move_up<0:
                         time_move_up = float('inf')
-                
-                if self.position[1]+self.speed[1]*time_move_right>=dl[1] and self.position[1]+self.speed[1]*time_move_right<=ul[1]:
+                if time_move_right<float('inf') and self.position[1]+self.speed[1]*time_move_right>=dl[1] and self.position[1]+self.speed[1]*time_move_right<=ul[1]:
                     new_time_move = time_move_right
                     direction_conflict=(1,0)
-                elif self.position[0]+self.speed[0]*time_move_up>=dl[0] and self.position[0]+self.speed[0]*time_move_up<=dr[0]:
+                elif time_move_up<float('inf') and self.position[0]+self.speed[0]*time_move_up>=dl[0] and self.position[0]+self.speed[0]*time_move_up<=dr[0]:
                     new_time_move = time_move_up
                     direction_conflict=(0,1)
                 else:
