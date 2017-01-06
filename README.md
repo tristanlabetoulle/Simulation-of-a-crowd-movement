@@ -5,4 +5,4 @@ This program aims at simulating a crowd movement at a macroscopic level for agen
 Launch the file Simulation to see an example of how to use it.
 
 # Requirements
-ffmpeg must be installed
+ffmpeg must be installed to save the simulation in a mp4 file
